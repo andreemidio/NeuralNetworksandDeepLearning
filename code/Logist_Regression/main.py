@@ -1,8 +1,10 @@
+import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
 from load_dataset import LoadDataSet
 from model import model
+from predict import predict
 
 test = 'datasets/test_catvnoncat.h5'
 
@@ -25,16 +27,24 @@ test_set_x = test_set_x_flatten / 255
 print('% of Non-cat in the training data: ', 100 * np.sum(train_set_y == 0) / len(train_set_y[0]))
 print('% of Cat in the training data: ', 100 * np.sum(train_set_y == 1) / len(train_set_y[0]))
 
-d = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations=200000, learning_rate=0.0005, print_cost=True)
+d = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations=20000, learning_rate=0.0005, print_cost=True)
 
 costs = np.squeeze(d['costs'])
 
-print(costs)
+
+def own_Image(my_image):
+    # We preprocess the image to fit your algorithm.
+    fname = my_image
+    image = np.array(cv2.imread(fname))
+    my_image = cv2.resize(image, (num_px, num_px))
+
+    my_image = my_image.reshape((1, num_px * num_px * 3)).T
+
+    my_predicted_image = predict(d["w"], d["b"], my_image)
+
+    plt.imshow(image)
+    print("y = " + str(np.squeeze(my_predicted_image)) + ", your algorithm predicts a \"" + classes[
+        int(np.squeeze(my_predicted_image)),].decode("utf-8") + "\" picture.")
 
 
-costs = np.squeeze(d['costs'])
-plt.plot(costs)
-plt.ylabel('cost')
-plt.xlabel('iterations (per hundreds)')
-plt.title("Learning rate =" + str(d["learning_rate"]))
-plt.show()
+own_Image('images/cat.png')
