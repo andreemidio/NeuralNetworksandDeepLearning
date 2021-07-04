@@ -14,6 +14,7 @@ matplotlib = "*"
 pillow = "*"
 lrutils = "*"
 fastapi = "*"
+python-dateutil = "*"
 
 [dev-packages]
 public-test = "*"
