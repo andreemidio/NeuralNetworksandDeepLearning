@@ -1,6 +1,8 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 from load_dataset import LoadDataSet
+from model import model
 
 test = 'datasets/test_catvnoncat.h5'
 
@@ -22,3 +24,17 @@ test_set_x = test_set_x_flatten / 255
 
 print('% of Non-cat in the training data: ', 100 * np.sum(train_set_y == 0) / len(train_set_y[0]))
 print('% of Cat in the training data: ', 100 * np.sum(train_set_y == 1) / len(train_set_y[0]))
+
+d = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations=200000, learning_rate=0.0005, print_cost=True)
+
+costs = np.squeeze(d['costs'])
+
+print(costs)
+
+
+costs = np.squeeze(d['costs'])
+plt.plot(costs)
+plt.ylabel('cost')
+plt.xlabel('iterations (per hundreds)')
+plt.title("Learning rate =" + str(d["learning_rate"]))
+plt.show()
